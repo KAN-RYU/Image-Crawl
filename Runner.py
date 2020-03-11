@@ -39,7 +39,7 @@ if __name__ == "__main__":
         if len(Updated_Queue) == 0:
             break
 
-        print("Remaining " + len(Updated_Queue) + " item(s).")
+        print("Remaining " + str(len(Updated_Queue)) + " item(s).")
         current = Updated_Queue.pop(0)
 
-    print("Done! Total: " + totalNumber + " Manga.")
+    print("Done! Total: " + str(totalNumber) + " Manga.")
