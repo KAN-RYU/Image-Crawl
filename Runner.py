@@ -1,4 +1,5 @@
 import Image_Downloader
+import time
 
 FILENAME = "List.txt"
 VERBOS = True
@@ -13,6 +14,8 @@ if __name__ == "__main__":
 
     #첫번째 주소 불러오기
     current = download_Queue.pop(0)
+    Image_Downloader.driver.get(current)
+    time.sleep(10)
 
     while True:
         totalNumber += 1

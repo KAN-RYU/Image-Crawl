@@ -40,7 +40,7 @@ def download_manga(url = '', V = False):
             loop = 5
             while(loop > 0):
                 try:
-                    urllib.request.urlretrieve(img_src, './' + title + '/' + str(i) + '.jpg')
+                    urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i) + '.jpg')
                 except Exception as e:
                     print(e)
                     loop -= 1
