@@ -1,7 +1,9 @@
 import Image_Downloader
 import time
 
-queueFile = open("List.txt", "r")
+FILENAME = "List.txt"
+
+queueFile = open(FILENAME, "r")
 download_Queue = queueFile.readlines()
 queueFile.close()
 totalNumber = len(download_Queue)
@@ -19,7 +21,7 @@ while True:
         doneList.append(current)
 
     #큐 업데이트
-    queueFile = open("List.txt", "r")
+    queueFile = open(FILENAME, "r")
     Updated_Queue = queueFile.readlines()
     print(Updated_Queue)
     queueFile.close()
@@ -27,7 +29,7 @@ while True:
     if Updated_Queue[0] == current:
         Updated_Queue.pop(0)
         
-        queueFile = open("List.txt", "w")
+        queueFile = open(FILENAME, "w")
         for s in Updated_Queue:
             queueFile.write(s)
         
