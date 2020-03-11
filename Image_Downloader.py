@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException
 import os
 import socket
+import time
 
 timeout = 20
 socket.setdefaulttimeout(timeout)
@@ -16,13 +17,22 @@ urllib.request.install_opener(opener)
 def download_manga(url = '', V = False):
     driver.get(url)
     while(True):
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-
         #제목 찾기
         #사용할 웹 페이지에 따라 수정하셔야 합니다.
-        title = soup.find('meta', attrs={'name': 'title'})
-        title = title.get('content')
+        while True:
+            try:
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+
+                title = soup.find('meta', attrs={'name': 'title'})
+                title = title.get('content')
+            except Exception as e:
+                print(e)
+                time.sleep(5)
+                driver.get(url)
+            else:
+                break
+
         try:
             os.mkdir('./Result/' + title)
         except FileExistsError:
