@@ -19,6 +19,8 @@ def download_manga(url = '', V = False):
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
 
+        #제목 찾기
+        #사용할 웹 페이지에 따라 수정하셔야 합니다.
         title = soup.find('meta', attrs={'name': 'title'})
         title = title.get('content')
         try:
@@ -26,6 +28,8 @@ def download_manga(url = '', V = False):
         except FileExistsError:
             pass
 
+        #이미지가 있는 클래스 찾기
+        #사용할 웹 페이지에 따라 수정하셔야 합니다.
         tag = soup.find('div', attrs={'class': 'view-content scroll-viewer'})
         images = tag.find_all('img')
         if V:
@@ -44,6 +48,8 @@ def download_manga(url = '', V = False):
                 else:
                     break
         
+        #다음 화 버튼 찾기
+        #사용할 웹 페이지에 따라 수정하셔야 합니다.
         try:
             driver.find_element_by_xpath('//a[@class="chapter_next"]').click()
         except ElementNotInteractableException:
