@@ -13,7 +13,7 @@ opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
 urllib.request.install_opener(opener)
 
-def download_manga(url = ''):
+def download_manga(url = '', V = False):
     driver.get(url)
     while(True):
         html = driver.page_source
@@ -28,7 +28,8 @@ def download_manga(url = ''):
 
         tag = soup.find('div', attrs={'class': 'view-content scroll-viewer'})
         images = tag.find_all('img')
-        print(title + ' '+ str(len(images)) + '장')
+        if V:
+            print(title + ' '+ str(len(images)) + '장')
         for i, img in enumerate(images):
             img_src = img.get('src')
             
@@ -50,7 +51,7 @@ def download_manga(url = ''):
         except Exception as e:
             print(e)
     
-    print("done")
+    print(title + " done!")
 
 if __name__ == "__main__":
-    download_manga(input())
+    download_manga(input(), True)
