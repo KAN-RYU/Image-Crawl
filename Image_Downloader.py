@@ -64,6 +64,7 @@ def download_manga(url = '', V = False):
                     continue
                 else:
                     break
+                print(i)
         
         #다음 화 버튼 찾기
         #사용할 웹 페이지에 따라 수정하셔야 합니다.
