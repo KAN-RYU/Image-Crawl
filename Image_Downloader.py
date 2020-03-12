@@ -10,6 +10,7 @@ timeout = 20
 socket.setdefaulttimeout(timeout)
 
 driver = webdriver.Chrome('./chromedriver')
+driver.set_page_load_timeout(30)
 opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
 urllib.request.install_opener(opener)
@@ -29,7 +30,13 @@ def download_manga(url = '', V = False):
             except Exception as e:
                 print(e)
                 time.sleep(5)
-                driver.get(url)
+                for i in range(3):
+                    try:
+                        driver.refresh()
+                    except Exception as ex:
+                        print(ex)
+                    else:
+                        break
             else:
                 break
 
