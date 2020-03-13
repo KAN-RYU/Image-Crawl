@@ -43,3 +43,4 @@ if __name__ == "__main__":
         current = Updated_Queue.pop(0)
 
     print("Done! Total: " + str(totalNumber) + " Manga.")
+    Image_Downloader.driver.close()
