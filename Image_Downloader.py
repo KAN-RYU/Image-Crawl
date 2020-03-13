@@ -5,6 +5,7 @@ from selenium.common.exceptions import ElementNotInteractableException
 import os
 import socket
 import time
+from PIL import Image
 
 timeout = 20
 socket.setdefaulttimeout(timeout)
@@ -49,23 +50,59 @@ def download_manga(url = '', V = False):
         #사용할 웹 페이지에 따라 수정하셔야 합니다.
         tag = soup.find('div', attrs={'class': 'view-content scroll-viewer'})
         images = tag.find_all('img')
-        if V:
-            print(title + ' '+ str(len(images)) + '장')
-        for i, img in enumerate(images):
-            img_src = img.get('src')
-            
-            loop = 5
-            while(loop > 0):
-                try:
-                    urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i) + '.jpg')
-                except Exception as e:
-                    print(e)
-                    loop -= 1
-                    continue
+        if len(images) != 0:
+            if V:
+                print(title + ' '+ str(len(images)) + '장')
+            for i, img in enumerate(images):
+                img_src = img.get('src')
+                
+                loop = 5
+                while(loop > 0):
+                    try:
+                        urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i) + '.jpg')
+                    except Exception as e:
+                        print(e)
+                        loop -= 1
+                        continue
+                    else:
+                        break
+                    print(i)
+
+        #캔버스인 경우
+        else:
+            images_container = driver.find_element_by_css_selector('div.view-content.scroll-viewer')
+            images = images_container.find_elements_by_tag_name('canvas')
+
+            js_script = '''\
+            bottom_navi = document.getElementsByClassName('manga-bottom-navi');
+            bottom_navi[0].style.display = 'none';
+            '''
+            driver.execute_script(js_script)
+
+            if V:
+                print(title + ' '+ str(len(images)) + '장')
+            for i, img in enumerate(images):
+                img.screenshot('./Result/' + title + '/' + str(i) + '.png')
+            images[0].screenshot('./Result/' + title + '/0.png')
+
+            #합치기
+            i = 0
+            while True:
+                if os.path.exists('./Result/' + title + '/' + str(2 * i) + '.png'):
+                    up_image = Image.open('./Result/' + title + '/' + str(2 * i) + '.png')
+                    down_image = Image.open('./Result/' + title + '/' + str(2 * i + 1) + '.png')
+                    new_image = Image.new('RGB', (up_image.size[0], up_image.size[1] + down_image.size[1]))
+                    new_image.paste(up_image, (0,0))
+                    new_image.paste(down_image, (0, up_image.size[1]))
+                    up_image.close()
+                    down_image.close()
+                    os.remove('./Result/' + title + '/' + str(2 * i) + '.png')
+                    os.remove('./Result/' + title + '/' + str(2 * i + 1) + '.png')
+                    new_image.save('./Result/' + title + '/' + str(i) + '.png')
+                    i += 1
                 else:
                     break
-                print(i)
-        
+                
         #다음 화 버튼 찾기
         #사용할 웹 페이지에 따라 수정하셔야 합니다.
         try:
