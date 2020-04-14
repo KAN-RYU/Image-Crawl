@@ -5,8 +5,10 @@ from selenium.common.exceptions import ElementNotInteractableException
 import os
 import socket
 import time
+import sys
 from PIL import Image
 
+SPIN_BAR = '-\\|/'
 timeout = 20
 socket.setdefaulttimeout(timeout)
 
@@ -15,6 +17,19 @@ driver.set_page_load_timeout(30)
 opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
 urllib.request.install_opener(opener)
+
+def parse_name(name = ''):
+    name = name.replace('\\', '￦')
+    name = name.replace('/', '／')
+    name = name.replace(':', '：')
+    name = name.replace('*', '＊')
+    name = name.replace('?', '？')
+    name = name.replace('"', '＂')
+    name = name.replace('<', '＜')
+    name = name.replace('>', '＞')
+    name = name.replace('|', '｜')
+    name = name.replace('.', '．')
+    return name
 
 def download_manga(url = '', V = False):
     driver.get(url)
@@ -41,6 +56,7 @@ def download_manga(url = '', V = False):
             else:
                 break
 
+        title = parse_name(title)
         try:
             os.mkdir('./Result/' + title)
         except FileExistsError:
@@ -51,9 +67,10 @@ def download_manga(url = '', V = False):
         tag = soup.find('div', attrs={'class': 'view-content scroll-viewer'})
         images = tag.find_all('img')
         if len(images) != 0:
-            if V:
-                print(title + ' '+ str(len(images)) + '장')
             for i, img in enumerate(images):
+                if V:
+                    sys.stdout.write('\r' + title + ' ' + str(i) + '/' + str(len(images)) + '장 ')
+                    sys.stdout.flush()
                 img_src = img.get('src')
                 
                 loop = 5
@@ -79,9 +96,10 @@ def download_manga(url = '', V = False):
             '''
             driver.execute_script(js_script)
 
-            if V:
-                print(title + ' '+ str(len(images)) + '장')
             for i, img in enumerate(images):
+                if V:
+                    sys.stdout.write('\r' + title + ' ' + str(i) + '/' + str(len(images)) + '장 ')
+                    sys.stdout.flush()
                 img.screenshot('./Result/' + title + '/' + str(i) + '.png')
             images[0].screenshot('./Result/' + title + '/0.png')
 
