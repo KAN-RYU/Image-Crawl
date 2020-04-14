@@ -69,7 +69,7 @@ def download_manga(url = '', V = False):
         if len(images) != 0:
             for i, img in enumerate(images):
                 if V:
-                    sys.stdout.write('\r' + title + ' ' + str(i) + '/' + str(len(images)) + '장 ')
+                    sys.stdout.write('\r' + title + ' ' + str(i + 1) + '/' + str(len(images)) + '장 ')
                     sys.stdout.flush()
                 img_src = img.get('src')
                 if img_src is None:
@@ -78,7 +78,7 @@ def download_manga(url = '', V = False):
                 loop = 5
                 while(loop > 0):
                     try:
-                        urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i) + '.jpg')
+                        urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i + 1) + '.jpg')
                     except Exception as e:
                         print(e)
                         loop -= 1
@@ -132,7 +132,7 @@ def download_manga(url = '', V = False):
         except Exception as e:
             print(e)
     
-    print(title + " done!")
+    print('\n' + title + " done!")
 
 if __name__ == "__main__":
     download_manga(input(), True)
