@@ -72,6 +72,8 @@ def download_manga(url = '', V = False):
                     sys.stdout.write('\r' + title + ' ' + str(i) + '/' + str(len(images)) + '장 ')
                     sys.stdout.flush()
                 img_src = img.get('src')
+                if img_src is None:
+                    img_src = img.get('lazy-src')
                 
                 loop = 5
                 while(loop > 0):
