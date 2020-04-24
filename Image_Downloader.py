@@ -12,7 +12,14 @@ SPIN_BAR = '-\\|/'
 timeout = 20
 socket.setdefaulttimeout(timeout)
 
-driver = webdriver.Chrome('./chromedriver')
+options = webdriver.ChromeOptions()
+# options.add_argument('headless')
+# options.add_argument('window-size=1920x1080')
+# options.add_argument("disable-gpu")
+#options.add_argument("--disable-gpu")
+
+driver = webdriver.Chrome('./chromedriver', chrome_options=options)
+
 driver.set_page_load_timeout(30)
 opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
@@ -74,11 +81,13 @@ def download_manga(url = '', V = False):
                 img_src = img.get('src')
                 if img_src is None:
                     img_src = img.get('lazy-src')
-                
+
+                result = driver.execute_script("return img_list")
+
                 loop = 5
                 while(loop > 0):
                     try:
-                        urllib.request.urlretrieve(img_src, './Result/' + title + '/' + str(i + 1) + '.jpg')
+                        urllib.request.urlretrieve(result[i], './Result/' + title + '/' + str(i + 1) + '.jpg')
                     except Exception as e:
                         print(e)
                         loop -= 1
